@@ -1,23 +1,12 @@
-# ## Singing Arc (1899) — Technical Notes
+# Singing Arc Emulation (1899)
 
-Inventor: William Duddell
+A physically-informed digital emulation of the Singing Arc developed by William Duddell in 1899.
 
-### Operation
+## Overview
+- Negative resistance arc behavior
+- LC circuit pitch control
+- Natural instability and noise
 
-- Based on carbon arc lamp behavior
-- Arc exhibits negative resistance
-- LC circuit induces oscillation
-- Produces audible tones
-
-### Characteristics
-
-- Continuous tone (no articulation)
-- Unstable pitch
-- Broadband noise
-- Sensitive to electrical conditions
-
-### Limitations
-
-- Difficult to control precisely
-- Limited pitch stability
-- Dependent on physical arc conditions
+## Structure
+- /historical → accurate emulation
+- /patches → experimental extensions

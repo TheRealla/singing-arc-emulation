@@ -1,0 +1,7 @@
+{
+  "arcCurrent": 0.6,
+  "arcGap": 0.5,
+  "inductance": 0.5,
+  "capacitance": 0.5,
+  "noiseLevel": 0.2
+}
