@@ -1,0 +1,58 @@
+graph SingingArcHistorical
+{
+    input event std::midi::Message midiIn;
+    output stream float out;
+
+    // =========================
+    // PARAMETERS (PHYSICAL ANALOGS)
+    // =========================
+    param float arcCurrent = 0.6;     // DC supply intensity
+    param float arcGap = 0.5;         // electrode distance (affects stability)
+    param float inductance = 0.5;     // L component
+    param float capacitance = 0.5;    // C component
+    param float noiseLevel = 0.2;     // arc noise
+
+    node
+    {
+        // =========================
+        // LC RESONANCE (PITCH)
+        // =========================
+        baseFreq = std::midi::noteToFrequency(midiIn.note);
+
+        // LC scaling approximation
+        lcFreq = baseFreq * (1.0 + (inductance - capacitance) * 0.5);
+
+        // =========================
+        // ARC OSCILLATION
+        // =========================
+        osc = std::oscillator::sine(lcFreq);
+
+        // Negative resistance behavior
+        arcNonlinear = tanh(osc * (1.0 + arcCurrent * 4.0));
+
+        // =========================
+        // INSTABILITY (REAL ARC BEHAVIOR)
+        // =========================
+        flicker =
+            std::noise::white() *
+            (arcGap * 0.3);
+
+        unstable = arcNonlinear + flicker;
+
+        // =========================
+        // BROADBAND ARC NOISE
+        // =========================
+        arcNoise = std::noise::white() * noiseLevel;
+
+        // =========================
+        // SIMPLE FILTERING (ARC SPECTRUM)
+        // =========================
+        shaped = std::filter::highpass(unstable, 80.0);
+        shaped = std::filter::lowpass(shaped, 10000.0);
+
+        // =========================
+        // OUTPUT
+        // =========================
+        out <- shaped + arcNoise;
+    }
+}
